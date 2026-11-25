@@ -1,0 +1,25 @@
+[workspace]
+
+[workspace.package]
+version = "0.1.0"
+description = "Unified AI & neural network plugin for Bevy with pluggable CPU, GPU, and scripted backends."
+repository = "https://github.com/RyaguzovMichael/bevy_brain"
+license = "MIT"
+
+[package]
+name = "bevy_brain"
+version.workspace = true
+description.workspace = true
+repository.workspace = true
+license.workspace = true
+edition = "2024"
+categories = [ "game-development" ]
+exclude = [ "assets/" ]
+keywords = [ "gamedev", "bevy", "ai", "neural" ]
+readme = "README.md"
+
+[dependencies]
+bevy = { version = "0.20.1", default-features = false }
+
+[dev-dependencies]
+bevy = {version = "0.20.1", features = ["debug"]}
