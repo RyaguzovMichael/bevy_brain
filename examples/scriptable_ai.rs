@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_brain::*;
+use bevy_brain::prelude::*;
 
 const SCENE_RADIUS: f32 = 3.0;
 
