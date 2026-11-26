@@ -23,3 +23,4 @@ bevy = { version = "0.20.1", default-features = false }
 
 [dev-dependencies]
 bevy = {version = "0.20.1", features = ["debug"]}
+rstest = "0.29.0"

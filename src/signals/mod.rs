@@ -78,3 +78,26 @@ pub trait BrainInput<const N: usize>: Send + Sync + 'static {
 pub trait BrainOutput<const N: usize>: Send + Sync + 'static {
     fn apply(&mut self, output: &[f32; N]);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rstest::rstest;
+
+    #[test]
+    fn convert_f32_to_unorm() {
+        let unorm = 1.0.to_unorm(2.0);
+
+        assert_eq!(0.5, unorm.get());
+    }
+
+    #[rstest]
+    #[case(-0.000001)]
+    #[case(-1.0)]
+    #[case(f32::MIN)]
+    fn when_convert_negative_f32_to_unorm_always_get_zero(#[case] input: f32) {
+        let unorm = input.to_unorm(1.0);
+
+        assert_eq!(0.0, unorm.get());
+    }
+}
