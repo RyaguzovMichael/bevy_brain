@@ -20,6 +20,7 @@ readme = "README.md"
 
 [dependencies]
 bevy = { version = "0.20.1", default-features = false }
+burn = { version = "0.22.1", default-features = false, features=["flex"] }
 
 [dev-dependencies]
 bevy = {version = "0.20.1", features = ["debug"]}
