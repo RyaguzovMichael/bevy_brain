@@ -110,4 +110,105 @@ mod tests {
 
         assert_eq!(0.0, unorm.get());
     }
+
+    #[rstest]
+    #[case(0.0, 1.0, 0.0)]
+    #[case(1.0, 4.0, 0.25)]
+    #[case(3.0, 4.0, 0.75)]
+    fn to_unorm_normalizes_by_max(#[case] input: f32, #[case] max: f32, #[case] expected: f32) {
+        let unorm = input.to_unorm(max);
+
+        assert_eq!(expected, unorm.get());
+    }
+
+    #[rstest]
+    #[case(1.0, 1.0)]
+    #[case(5.0, 2.0)]
+    #[case(f32::MAX, 1.0)]
+    fn to_unorm_clamps_above_max_to_one(#[case] input: f32, #[case] max: f32,) {
+        let unorm = input.to_unorm(max);
+
+        assert_eq!(1.0, unorm.get());
+    }
+
+    #[rstest]
+    #[case(0.0, 10.0, 0.0)]
+    #[case(10.0, 10.0, 1.0)]
+    #[case(-10.0, 10.0, -1.0)]
+    #[case(5.0, 10.0, 0.5)]
+    #[case(-5.0, 10.0, -0.5)]
+    fn to_snorm_maps_range(#[case] input: f32, #[case] range: f32, #[case] expected: f32) {
+        let snorm = input.to_snorm(range);
+
+        assert_eq!(expected, snorm.get());
+    }
+
+    #[rstest]
+    #[case(f32::MAX)]
+    #[case(f32::INFINITY)]
+    fn to_snorm_clamps_above_one(#[case] input: f32) {
+        let snorm = input.to_snorm(1.0);
+
+        assert_eq!(1.0, snorm.get());
+    }
+
+    #[rstest]
+    #[case(f32::MIN)]
+    #[case(f32::NEG_INFINITY)]
+    fn to_snorm_clamps_below_minus_one(#[case] input: f32) {
+        let snorm = input.to_snorm(1.0);
+
+        assert_eq!(-1.0, snorm.get());
+    }
+
+    #[test]
+    fn unorm_invert_returns_one_minus_value() {
+        let unorm = 0.25.to_unorm(1.0);
+
+        assert_eq!(0.75, unorm.invert().get());
+    }
+
+    #[test]
+    fn unorm_invert_twice_returns_original() {
+        let unorm = 0.3.to_unorm(1.0);
+
+        assert_eq!(unorm.get(), unorm.invert().invert().get());
+    }
+
+    #[test]
+    fn snorm_invert_negates_value() {
+        let snorm = 0.4.to_snorm(1.0);
+
+        assert_eq!(-0.4, snorm.invert().get());
+    }
+
+    #[test]
+    fn snorm_invert_twice_returns_original() {
+        let snorm = (-0.7).to_snorm(1.0);
+
+        assert_eq!(snorm.get(), snorm.invert().invert().get());
+    }
+
+    #[test]
+    fn normalized_from_unorm_keeps_value() {
+        let unorm = 0.6.to_unorm(1.0);
+        let normalized = Normalized::from(unorm);
+
+        assert_eq!(0.6, normalized.get());
+    }
+
+    #[test]
+    fn normalized_from_snorm_keeps_value() {
+        let snorm = (-0.6).to_snorm(1.0);
+        let normalized = Normalized::from(snorm);
+
+        assert_eq!(-0.6, normalized.get());
+    }
+
+    #[test]
+    fn default_values_are_zero() {
+        assert_eq!(0.0, Normalized::default().get());
+        assert_eq!(0.0, UNorm::default().get());
+        assert_eq!(0.0, SNorm::default().get());
+    }
 }
