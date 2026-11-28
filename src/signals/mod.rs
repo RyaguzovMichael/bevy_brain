@@ -72,11 +72,21 @@ impl F32NormExt for f32 {
 }
 
 pub trait BrainInput<const N: usize>: Send + Sync + 'static {
-    fn fill(&self, input: &mut [Normalized; N]);
+    fn fill(&self, _input: &mut [Normalized; N]) {
+        debug_assert!(
+            false,
+            "BrainInput::fill is not implemented. It is required to feed data into neural network brains."
+        );
+    }
 }
 
 pub trait BrainOutput<const N: usize>: Send + Sync + 'static {
-    fn apply(&mut self, output: &[f32; N]);
+    fn apply(&mut self, _output: &[f32; N]) {
+        debug_assert!(
+            false,
+            "BrainOutput::apply is not implemented. It is required to read output from neural network brains."
+        );
+    }
 }
 
 #[cfg(test)]
